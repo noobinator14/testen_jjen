@@ -18,3 +18,5 @@ SimpleL_pointer.o : SimpleL_pointer.c
 
 clean :
 	rm -f *.o path
+
+

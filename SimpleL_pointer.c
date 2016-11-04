@@ -146,3 +146,5 @@ void LIST_first (info_deikti  const linfo, typos_deikti * const first, int * con
 	if (LIST_keni(linfo))
 		*error=1;
 }
+
+

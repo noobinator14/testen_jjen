@@ -18,3 +18,5 @@ int destroyNodeIndex(NodeIndex* index);	// free
 int double_index(NodeIndex **index, int current_ind_size);
 
 #endif
+
+

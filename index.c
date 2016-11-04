@@ -50,3 +50,5 @@ int double_index(NodeIndex **index, int current_ind_size) {
 		(*index)[i]=-1;
 	return OK_SUCCESS;
 }
+
+

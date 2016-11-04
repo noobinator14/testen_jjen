@@ -35,4 +35,4 @@ void LIST_first(const info_deikti  linfo, typos_deikti * const first, int * cons
 /*prakseis anazhthshs*/
 int anazhthsh (info_deikti linfo, int num);
 
-#endif /*#ifndef __POINTER__LIST_ */
+#endif
