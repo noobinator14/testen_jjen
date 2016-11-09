@@ -2,7 +2,7 @@
 #define __MYBFS_H__
 
 
-#include "Pointer_List.h"
+#include "../list/Pointer_List.h"
 
 
 int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, NodeIndex * out_index, NodeIndex * in_index,
@@ -11,5 +11,3 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 
 
 #endif
-
-

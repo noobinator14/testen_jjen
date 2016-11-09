@@ -1,15 +1,15 @@
 #include <stdlib.h>
 #include <stdint.h>
-#include "buffer.h"
+#include "../buffer/buffer.h"
 #include "index.h"
 
 NodeIndex* createNodeIndex() {
 
 	int i=0;
 
-	NodeIndex *index=malloc(STARTING_IND_SIZE*sizeof(NodeIndex));	// allocate space for 'ΙΝΙΤ_SIZE' nodes
+	NodeIndex *index=malloc(STARTING_IND_SIZE*sizeof(NodeIndex));	// allocate space
 	for (i=0;i<STARTING_IND_SIZE;i++)
-		index[i]=-1;					// initialize to '-1' , means it's empty/unused
+		index[i]=-1;				// initialize to '-1' , means it's empty/unused
 	return index;
 }
 
@@ -50,5 +50,3 @@ int double_index(NodeIndex **index, int current_ind_size) {
 		(*index)[i]=-1;
 	return OK_SUCCESS;
 }
-
-

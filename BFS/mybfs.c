@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include "buffer.h"
-#include "index.h"
-#include "Pointer_List.h"
+#include "../buffer/buffer.h"
+#include "../index/index.h"
+#include "../list/Pointer_List.h"
 #include "mybfs.h"
 
 int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, NodeIndex * out_index, NodeIndex * in_index,
@@ -171,5 +171,8 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 	free(visited);
 	return -1;						// path does not exist
 }
+
+
+
 
 

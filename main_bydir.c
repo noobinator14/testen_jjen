@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#include "index.h"
-#include "buffer.h"
-#include "mybfs.h"
-#include "Pointer_List.h"
+#include "./index/index.h"
+#include "./buffer/buffer.h"
+#include "./Bidirectional_BFS/bydir.h"
+#include "./list/Pointer_List.h"
 
 int main(int argc, char *argv[]) {
 
@@ -28,10 +28,10 @@ int main(int argc, char *argv[]) {
 
 	NodeIndex* out_index=createNodeIndex();
 	NodeIndex* in_index=createNodeIndex();
-	printf("In+out indexes created!\n");
+	//printf("In+out indexes created!\n");
 	Buffer* out_buffer=createBuffer();
 	Buffer* in_buffer=createBuffer();
-	printf("In+out buffers created!\n");
+	//printf("In+out buffers created!\n");
 
 
 	fp1 = fopen(argv[1], "r");
@@ -39,14 +39,14 @@ int main(int argc, char *argv[]) {
 		perror("fopen");
 		printf("Error: Couldn't open file %s\n", argv[1]);
 	}
-	printf("File: %s opened successfully\n", argv[1]);
+	//printf("File: %s opened successfully\n", argv[1]);
 
 	fp2 = fopen(argv[2], "r");
 	if(fp2 == NULL) {
 		perror("fopen");
 		printf("Error: Couldn't open file %s\n", argv[2]);
 	}
-	printf("File: %s opened successfully\n\n", argv[2]);
+	//printf("File: %s opened successfully\n\n", argv[2]);
 	fp = fp1;
 	while(1) {
 		if(fscanf(fp, "%1s", s) == EOF) {	//Reads only 1 char of the first word
@@ -85,8 +85,8 @@ int main(int argc, char *argv[]) {
 					break;
 				}
 			}
-			if(count % 100000 == 0)
-				printf("Count: %ld\n", count);
+			//if(count % 100000 == 0)
+				//printf("Count: %ld\n", count);
 		}
 		else if(fp == fp2) {
 			if(strcmp(s, "F") == 0) {
@@ -96,19 +96,22 @@ int main(int argc, char *argv[]) {
 				break;
 			}
 			if(strcmp(s, "Q") == 0) {
-				info_deikti next_nodes=LIST_dimiourgia();
-				//printf("from %u to %u takes ",from,to);
-				s_path_fo=mybfs(from,to,out_buffer,in_buffer,out_index,in_index,current_out_ind_size,current_in_ind_size,&next_nodes);
+				info_deikti next_nodes1=LIST_dimiourgia();
+				info_deikti next_nodes2=LIST_dimiourgia();
+				if (next_nodes1==NULL || next_nodes2==NULL)
+					return -1;
+				s_path_fo=mybfs(from, to, out_buffer, in_buffer, out_index, in_index, current_out_ind_size, current_in_ind_size, &next_nodes1, &next_nodes2);
 				printf("%ld\n",s_path_fo);
-				LIST_katastrofi(&next_nodes);
+				LIST_katastrofi(&next_nodes1);
+				LIST_katastrofi(&next_nodes2);
 			}
-			if(count % 1000 == 0)
-				printf("Count: %ld\n", count);
+			//if(count % 1000 == 0)
+			//	printf("Count: %ld\n", count);
 		}
 		neighb_exists=0;
 		if((fp == fp1) || ((fp == fp2) && (strcmp(s, "A")==0))) {
 			if (from>=0 && to>=0 && from!=to) {
-				// OUT structures 
+				/* OUT structures */
 				head=getListHead(out_index,from,current_out_ind_size);
 				if (head>=0) {								// node exists
 					last=add_neighbour(out_buffer,head,to);
@@ -123,7 +126,7 @@ int main(int argc, char *argv[]) {
 						new=allocNewNode(out_buffer);
 						if (new==-1) {						// not enough space... double buffer and try again
 							if (double_buffer(&out_buffer,current_out_buf_size)==OK_SUCCESS) {
-								printf("Buffer(out) doubled!\n");
+								//printf("Buffer(out) doubled!\n");
 							}
 							else
 								printf("FAIL: Buffer(out) realloc\n");
@@ -150,7 +153,7 @@ int main(int argc, char *argv[]) {
 					if (head==-2) {						// out of bounds->double index until nodeId fits into index
 						while (head==-2) {
 							if (double_index(&out_index,current_out_ind_size)==OK_SUCCESS) {
-								printf("Index(out) doubled!\n");
+								//printf("Index(out) doubled!\n");
 							}
 							else
 								printf("FAIL: Index(out) realloc\n");
@@ -161,7 +164,7 @@ int main(int argc, char *argv[]) {
 					offset=allocNewNode(out_buffer);
 					if (offset==-1) {						// double our buffer
 						if (double_buffer(&out_buffer,current_out_buf_size)==OK_SUCCESS) {
-							printf("Buffer(out) doubled!\n");
+							//printf("Buffer(out) doubled!\n");
 						}
 						else
 							printf("FAIL: Buffer(out) realloc\n");
@@ -182,13 +185,11 @@ int main(int argc, char *argv[]) {
 					}
 					else if (last==NEIGHB_EXISTS)
 						printf("Something went wrong...\n");
-					else {								// NOT sure if needed
-						// ...
+					else
 						printf("I WILL NEVER BE PRINT!\n");
-					}
 				}
 				if (neighb_exists==0) {
-					// IN structures 
+					/* IN structures */
 					head=getListHead(in_index,to,current_in_ind_size);
 					if (head>=0) {								// node exists
 						last=add_neighbour(in_buffer,head,from);
@@ -202,7 +203,7 @@ int main(int argc, char *argv[]) {
 							new=allocNewNode(in_buffer);
 							if (new==-1) {						// not enough space... double buffer and try again
 								if (double_buffer(&in_buffer,current_in_buf_size)==OK_SUCCESS) {
-									printf("Buffer(in) doubled!\n");
+									//printf("Buffer(in) doubled!\n");
 								}
 								else
 									printf("FAIL: Buffer(in) realloc\n");
@@ -229,7 +230,7 @@ int main(int argc, char *argv[]) {
 						if (head==-2) {						// out of bounds->double index until nodeId fits into index
 							while (head==-2) {
 								if (double_index(&in_index,current_in_ind_size)==OK_SUCCESS) {
-									printf("Index(in) doubled!\n");
+									//printf("Index(in) doubled!\n");
 								}
 								else
 									printf("FAIL: Index(in) realloc\n");
@@ -240,7 +241,7 @@ int main(int argc, char *argv[]) {
 						offset=allocNewNode(in_buffer);
 						if (offset==-1) {						// double our buffer
 							if (double_buffer(&in_buffer,current_in_buf_size)==OK_SUCCESS) {
-								printf("Buffer(in) doubled!\n");
+								//printf("Buffer(in) doubled!\n");
 							}
 							else
 								printf("FAIL: Buffer(in) realloc\n");
@@ -261,10 +262,8 @@ int main(int argc, char *argv[]) {
 						}
 						else if (last==NEIGHB_EXISTS)
 							printf("Something went wrong...\n");
-						else {								// NOT sure if needed
-							// ...
+						else
 							printf("I WILL NEVER BE PRINT!\n");
-						}
 					}
 				}
 			}
@@ -276,55 +275,6 @@ int main(int argc, char *argv[]) {
 		return -10;
 	}
 
-	/*
-	//Printing babies
-	list_node my_node;
-	uint32_t kombos;
-	printf("\nOUT STRUCTURES\n-------------------------\n");
-	for (kombos=0;kombos<=19;kombos++) {
-		int off=getListHead(out_index,kombos,current_out_ind_size);
-		if (off==-1)
-			printf("Node(%u) doesn't exist\n",kombos);
-		else {
-			getListNode((out_buffer->base_addr)+off,&my_node);
-			printf("\nNode #%d\n",kombos);
-			while (1) {
-				printf("Neighbours:\n");
-				for (i=0;i<NEIGHB;i++)
-					printf("\t%d\n", my_node.neighbor[i]);
-				printf("Edge property:\n");
-				for (i=0;i<NEIGHB;i++)
-					printf("\t%d\n", my_node.edgeProperty[i]);
-				if (my_node.nextListNode==-1)
-					break;
-				else
-					getListNode((out_buffer->base_addr)+(my_node.nextListNode),&my_node);
-			}
-		}
-	}
-	printf("\nIN STRUCTURES\n-------------------------\n");
-	for (kombos=0;kombos<=19;kombos++) {
-		int off=getListHead(in_index,kombos,current_in_ind_size);
-		if (off==-1)
-			printf("Node(%u) doesn't exist\n",kombos);
-		else {
-			getListNode((in_buffer->base_addr)+off,&my_node);
-			printf("\nNode #%d\n",kombos);
-			while (1) {
-				printf("Neighbours:\n");
-				for (i=0;i<NEIGHB;i++)
-					printf("\t%d\n", my_node.neighbor[i]);
-				printf("Edge property:\n");
-				for (i=0;i<NEIGHB;i++)
-					printf("\t%d\n", my_node.edgeProperty[i]);
-				if (my_node.nextListNode==-1)
-					break;
-				else
-					getListNode((in_buffer->base_addr)+(my_node.nextListNode),&my_node);
-			}
-		}
-	}
- */
 	printf("\n");
 	if (destroyBuffer(out_buffer)==OK_SUCCESS)
 		printf("Buffer(out) destroyed...\n");
@@ -344,5 +294,3 @@ int main(int argc, char *argv[]) {
 		printf("FAIL: Index(in) destruction\n");
 	return 0;
 }
-
-

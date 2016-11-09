@@ -1,8 +1,8 @@
 #ifndef __BUFFER_H__
 #define __BUFFER_H__
 
-#define STARTING_BUF_SIZE 100000
-#define NEIGHB 80
+#define STARTING_BUF_SIZE 1		// how many structs fit
+#define NEIGHB 1
 #define NEIGHB_EXISTS -4
 #define OK_SUCCESS -5
 #define FAILURE -6
@@ -42,5 +42,3 @@ int double_buffer(Buffer **buf, int current_buf_size);
 
 
 #endif
-
-

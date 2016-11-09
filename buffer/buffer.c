@@ -85,5 +85,3 @@ int double_buffer(Buffer **buf, int current_buf_size) {
 	(*buf)->max_size=2*current_buf_size*sizeof(list_node);
 	return OK_SUCCESS;
 }
-
-

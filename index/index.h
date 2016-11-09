@@ -1,7 +1,7 @@
 #ifndef __INDEX_H__
 #define __INDEX_H__
 
-#define STARTING_IND_SIZE 50000
+#define STARTING_IND_SIZE 500000
 
 #include <stdint.h>
 
@@ -18,5 +18,3 @@ int destroyNodeIndex(NodeIndex* index);	// free
 int double_index(NodeIndex **index, int current_ind_size);
 
 #endif
-
-
