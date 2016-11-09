@@ -31,8 +31,8 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 	if(current_out_ind_size>current_in_ind_size) {
 		checked = malloc(sizeof(unsigned char)*current_out_ind_size);
 		if(checked == NULL) {
-			perror("JOHN CENA TOUROUTOUTOU\n");
-			return -4;
+			perror("JOHN CENA TOUROUTOUTOU");
+			return -2;
 		}
 		for(i=0; i<current_out_ind_size; i++) {
 			checked[i] = 0;
@@ -41,8 +41,8 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 	else {
 		checked = malloc(sizeof(unsigned char)*current_in_ind_size);
 		if(checked == NULL) {
-			perror("JOHN CENA TOUROUTOUTOU\n");
-			return -4;
+			perror("JOHN CENA TOUROUTOUTOU");
+			return -2;
 		}
 		for(i=0; i<current_in_ind_size; i++) {
 			checked[i] = 0;
@@ -60,8 +60,10 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 		}
 		else if (nod1.neighbor[i]>=0){
 			checked[nod1.neighbor[i]] = 1;
-			if ( (eisagogi_telos(next_nodes1,nod1.neighbor[i])) < 0)
+			if ( (eisagogi_telos(next_nodes1,nod1.neighbor[i])) < 0) {
+				free(checked);
 				return -2;
+			}
 		}
 	}
 	if (nod1.nextListNode>=0) {
@@ -76,8 +78,10 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 				}
 				else if (next1.neighbor[i]>=0) {
 					checked[nod1.neighbor[i]] = 1;
-					if ( (eisagogi_telos (next_nodes1,next1.neighbor[i])) < 0)
+					if ( (eisagogi_telos (next_nodes1,next1.neighbor[i])) < 0) {
+						free(checked);
 						return -2;
+					}
 				}
 			}
 			a=next1.nextListNode;
@@ -105,8 +109,10 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 			else {
 				checked[nod2.neighbor[i]] = 1;
 			}
-			if ( (eisagogi_telos(next_nodes2,nod2.neighbor[i])) < 0)
+			if ( (eisagogi_telos(next_nodes2,nod2.neighbor[i])) < 0) {
+				free(checked);
 				return -2;
+			}
 		}
 	}
 	if (nod2.nextListNode>=0) {
@@ -123,8 +129,10 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 					else {
 						checked[nod2.neighbor[i]] = 1;
 					}
-					if ( (eisagogi_telos (next_nodes2,next2.neighbor[i])) < 0)
+					if ( (eisagogi_telos (next_nodes2,next2.neighbor[i])) < 0) {
+						free(checked);
 						return -2;
+					}
 				}
 			}
 			a=next2.nextListNode;
@@ -144,7 +152,8 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 		visit_size=current_out_ind_size;
 		visited=malloc(visit_size*sizeof(unsigned char));
 		if(visited == NULL) {
-			return -4;
+			free(checked);
+			return -2;
 		}
 		for (i=0;i<visit_size;i++)
 			visited[i]=0;
@@ -153,7 +162,8 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 		visit_size=current_in_ind_size;
 		visited=malloc(visit_size*sizeof(unsigned char));
 		if(visited == NULL) {
-			return -4;
+			free(checked);
+			return -2;
 		}
 		for (i=0;i<visit_size;i++)
 			visited[i]=0;
@@ -166,7 +176,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 		printf("BFS: out of 'visited' bounds\n");
 		free(visited);
 		free(checked);
-		return -3;
+		return -2;
 	}
 
 /* shmadi gia au3hsh va8ous */
@@ -202,6 +212,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 						else if (nod1.neighbor[i]>=0) {
 							if(checked[nod1.neighbor[i]] == 2) {
 								free(checked);
+								free(visited);
 								return distance1+distance2;
 							}
 							else {
@@ -223,6 +234,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 								else if (next1.neighbor[i]>=0) {
 									if(checked[next1.neighbor[i]] == 2) {
 										free(checked);
+										free(visited);
 										return distance1+distance2;
 									}
 									else
@@ -248,7 +260,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 					printf("BFS: out of 'visited' bounds\n");
 					free(checked);
 					free(visited);
-					return -3;
+					return -2;
 				}
 			}
 
@@ -291,6 +303,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 						else if (nod2.neighbor[i]>=0) {
 							if(checked[nod2.neighbor[i]] == 1) {
 								free(checked);
+								free(visited);
 								return distance1+distance2;
 							}
 							else {
@@ -312,6 +325,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 								else if (next2.neighbor[i]>=0) {
 									if(checked[next2.neighbor[i]] == 1) {
 										free(checked);
+										free(visited);
 										return distance1+distance2;
 									}
 									else
@@ -337,7 +351,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 					printf("BFS: out of 'visited' bounds\n");
 					free(checked);
 					free(visited);
-					return -3;
+					return -2;
 				}
 			}
 

@@ -101,7 +101,12 @@ int main(int argc, char *argv[]) {
 				if (next_nodes1==NULL || next_nodes2==NULL)
 					return -1;
 				s_path_fo=mybfs(from, to, out_buffer, in_buffer, out_index, in_index, current_out_ind_size, current_in_ind_size, &next_nodes1, &next_nodes2);
-				printf("%ld\n",s_path_fo);
+				if (s_path_fo==-2) {
+					printf("Error inside bidirectional.\nCount=%ld. Terminating.\n",count);
+					return -1;
+				}
+				else
+					printf("%ld\n",s_path_fo);
 				LIST_katastrofi(&next_nodes1);
 				LIST_katastrofi(&next_nodes2);
 			}

@@ -11,7 +11,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 
 	int node1, node2, i, a, distance=1, current, offset, visit_size;
 	list_node nod1, nod2, next1, nod, next;
-	unsigned char *visited;
+	unsigned char *visited=NULL;
 
 	if (from==to)
 		return 0;
@@ -66,12 +66,20 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 	if (current_out_ind_size>current_in_ind_size) {
 		visit_size=current_out_ind_size;
 		visited=malloc(visit_size*sizeof(unsigned char));
+		if (visited==NULL) {
+			perror("malloc");
+			return -2;
+		}
 		for (i=0;i<visit_size;i++)
 			visited[i]=0;
 	}
 	else {
 		visit_size=current_in_ind_size;
 		visited=malloc(visit_size*sizeof(unsigned char));
+		if (visited==NULL) {
+			perror("malloc");
+			return -2;
+		}
 		for (i=0;i<visit_size;i++)
 			visited[i]=0;
 	}
@@ -80,7 +88,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 	else {
 		printf("BFS: out of 'visited' bounds\n");
 		free(visited);
-		return -3;
+		return -2;
 	}
 
 /* shmadi gia au3hsh va8ous */
@@ -110,7 +118,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 			if (current>=visit_size) {
 				printf("BFS: out of 'visited' bounds\n");
 				free(visited);
-				return -3;
+				return -2;
 			}
 			if (visited[current]==0) {
 				offset=getListHead(out_index,current,current_out_ind_size);
@@ -160,7 +168,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 				else {
 					printf("BFS: out of 'visited' bounds\n");
 					free(visited);
-					return -3;
+					return -2;
 				}
 			}
 
