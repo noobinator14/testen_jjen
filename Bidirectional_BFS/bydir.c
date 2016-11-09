@@ -54,8 +54,10 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 	for (i=0;i<NEIGHB;i++) {
 		if (nod1.neighbor[i]==-1)
 			break;
-		else if (nod1.neighbor[i]==to)
+		else if (nod1.neighbor[i]==to) {
+			free(checked);
 			return 1;
+		}
 		else if (nod1.neighbor[i]>=0){
 			checked[nod1.neighbor[i]] = 1;
 			if ( (eisagogi_telos(next_nodes1,nod1.neighbor[i])) < 0)
@@ -68,8 +70,10 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 			for (i=0;i<NEIGHB;i++) {
 				if (next1.neighbor[i]==-1)
 					break;
-				else if (next1.neighbor[i]==to)
+				else if (next1.neighbor[i]==to) {
+					free(checked);
 					return 1;
+				}
 				else if (next1.neighbor[i]>=0) {
 					checked[nod1.neighbor[i]] = 1;
 					if ( (eisagogi_telos (next_nodes1,next1.neighbor[i])) < 0)
@@ -83,8 +87,10 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 				break;
 		}
 	}
-	if (LIST_keni(*next_nodes1))
+	if (LIST_keni(*next_nodes1)) {
+		free(checked);
 		return -1;
+	}
 
 /* Elegxos se ba8os 1, koitame an oi in tou G einai oi out tou A */
 	checked[to]=2;
@@ -93,6 +99,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 			break;
 		else if (nod2.neighbor[i]>=0){
 			if(checked[nod2.neighbor[i]] == 1) {
+				free(checked);
 				return 2;
 			}
 			else {
@@ -110,6 +117,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 					break;
 				else if (next2.neighbor[i]>=0) {
 					if(checked[nod2.neighbor[i]] == 1) {
+						free(checked);
 						return 2;
 					}
 					else {
@@ -126,8 +134,10 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 				break;
 		}
 	}
-	if (LIST_keni(*next_nodes2))
+	if (LIST_keni(*next_nodes2)) {
+		free(checked);
 		return -1;	
+	}
 
 /* Desmeush xwrou gia visited, checked kai arxikopoihsh */
 	if (current_out_ind_size>current_in_ind_size) {
@@ -155,15 +165,18 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 	else {
 		printf("BFS: out of 'visited' bounds\n");
 		free(visited);
+		free(checked);
 		return -3;
 	}
 
 /* shmadi gia au3hsh va8ous */
 	if ( (eisagogi_telos(next_nodes1,-3) ) < 0 ) {
+		free(checked);
 		free(visited);
 		return -2;
 	}
 	if ( (eisagogi_telos(next_nodes2,-3) ) < 0 ) {
+		free(checked);
 		free(visited);
 		return -2;
 	}
@@ -174,6 +187,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 		distance1++;
 		if (LIST_keni(*next_nodes1)) {
 			free(visited);
+			free(checked);
 			return -1;
 		}
 		current1=eksagogi_arxi(next_nodes1);
@@ -187,6 +201,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 							break;
 						else if (nod1.neighbor[i]>=0) {
 							if(checked[nod1.neighbor[i]] == 2) {
+								free(checked);
 								return distance1+distance2;
 							}
 							else {
@@ -194,6 +209,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 							}
 							if ( (eisagogi_telos(next_nodes1,nod1.neighbor[i])) < 0) {
 								free(visited);
+								free(checked);
 								return -2;
 							}
 						}
@@ -205,12 +221,15 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 								if (next1.neighbor[i]==-1)
 									break;
 								else if (next1.neighbor[i]>=0) {
-									if(checked[next1.neighbor[i]] == 2)
+									if(checked[next1.neighbor[i]] == 2) {
+										free(checked);
 										return distance1+distance2;
+									}
 									else
 										checked[next1.neighbor[i]] = 1;
 									if ( (eisagogi_telos (next_nodes1,next1.neighbor[i])) < 0) {
 										free(visited);
+										free(checked);
 										return -2;
 									}
 								}
@@ -227,6 +246,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 					visited[current1]=1;
 				else {
 					printf("BFS: out of 'visited' bounds\n");
+					free(checked);
 					free(visited);
 					return -3;
 				}
@@ -234,6 +254,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 
 			if (LIST_keni(*next_nodes1)) {
 				free(visited);
+				free(checked);
 				return -1;
 			}
 
@@ -242,10 +263,12 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 
 		if (LIST_keni(*next_nodes1)) {
 			free(visited);
+			free(checked);
 			return -1;
 		}
 		if ( (eisagogi_telos (next_nodes1,-3)) < 0) {
 			free(visited);
+			free(checked);
 			return -2;
 		}
 
@@ -253,6 +276,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 		distance2++;
 		if (LIST_keni(*next_nodes2)) {
 			free(visited);
+			free(checked);
 			return -1;
 		}
 		current2=eksagogi_arxi(next_nodes2);
@@ -266,6 +290,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 							break;
 						else if (nod2.neighbor[i]>=0) {
 							if(checked[nod2.neighbor[i]] == 1) {
+								free(checked);
 								return distance1+distance2;
 							}
 							else {
@@ -273,6 +298,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 							}
 							if ( (eisagogi_telos(next_nodes2,nod2.neighbor[i])) < 0) {
 								free(visited);
+								free(checked);
 								return -2;
 							}
 						}
@@ -284,12 +310,15 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 								if (next2.neighbor[i]==-1)
 									break;
 								else if (next2.neighbor[i]>=0) {
-									if(checked[next2.neighbor[i]] == 1)
+									if(checked[next2.neighbor[i]] == 1) {
+										free(checked);
 										return distance1+distance2;
+									}
 									else
 										checked[next2.neighbor[i]] = 2;
 									if ( (eisagogi_telos (next_nodes2,next2.neighbor[i])) < 0) {
 										free(visited);
+										free(checked);
 										return -2;
 									}
 								}
@@ -306,6 +335,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 					visited[current2]=1;
 				else {
 					printf("BFS: out of 'visited' bounds\n");
+					free(checked);
 					free(visited);
 					return -3;
 				}
@@ -313,6 +343,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 
 			if (LIST_keni(*next_nodes2)) {
 				free(visited);
+				free(checked);
 				return -1;
 			}
 
@@ -321,10 +352,12 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 
 		if (LIST_keni(*next_nodes2)) {
 			free(visited);
+			free(checked);
 			return -1;
 		}
 		if ( (eisagogi_telos (next_nodes2,-3)) < 0) {
 			free(visited);
+			free(checked);
 			return -2;
 		}
 
@@ -333,6 +366,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 
 //////////////////////////////////////////
 	free(visited);
+	free(checked);
 	return -1;						// path does not exist
 }
 

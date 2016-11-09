@@ -1,8 +1,8 @@
 #ifndef __BUFFER_H__
 #define __BUFFER_H__
 
-#define STARTING_BUF_SIZE 1		// how many structs fit
-#define NEIGHB 1
+#define STARTING_BUF_SIZE 100000		// how many structs fit
+#define NEIGHB 100
 #define NEIGHB_EXISTS -4
 #define OK_SUCCESS -5
 #define FAILURE -6
