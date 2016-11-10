@@ -38,6 +38,7 @@ int main(int argc, char *argv[]) {
 	if(fp1 == NULL) {
 		perror("fopen");
 		printf("Error: Couldn't open file %s\n", argv[1]);
+		return -1;
 	}
 	//printf("File: %s opened successfully\n", argv[1]);
 
@@ -45,6 +46,8 @@ int main(int argc, char *argv[]) {
 	if(fp2 == NULL) {
 		perror("fopen");
 		printf("Error: Couldn't open file %s\n", argv[2]);
+		fclose(fp1);
+		return -1;
 	}
 	//printf("File: %s opened successfully\n\n", argv[2]);
 	fp = fp1;
@@ -133,14 +136,14 @@ int main(int argc, char *argv[]) {
 							if (double_buffer(&out_buffer,current_out_buf_size)==OK_SUCCESS) {
 								//printf("Buffer(out) doubled!\n");
 							}
-							else
+							else {
 								printf("FAIL: Buffer(out) realloc\n");
+								return -1;
+							}
 							current_out_buf_size=2*current_out_buf_size;
 							new=allocNewNode(out_buffer);
-							//printf("New list_node allocated\n");
 						}
-						//else
-							//printf("New list_node allocated\n");
+						//printf("New list_node allocated\n");
 						getListNode((out_buffer->base_addr)+last,&nod);
 						nod.nextListNode=new;					// we link 'new' as the continuation of 'last'
 						memmove((out_buffer->base_addr)+last,&nod,sizeof(list_node));
@@ -148,10 +151,14 @@ int main(int argc, char *argv[]) {
 						if (b==OK_SUCCESS) {
 							//printf("Neighbour added\n");
 						}
-						else if (b==NEIGHB_EXISTS)
+						else if (b==NEIGHB_EXISTS) {
 							printf("Something went wrong...\n");
-						else
+							return -1;
+						}
+						else {
 							printf("Something went very wrong...\n");
+							return -1;
+						}
 					}
 				}
 				else {
@@ -160,8 +167,10 @@ int main(int argc, char *argv[]) {
 							if (double_index(&out_index,current_out_ind_size)==OK_SUCCESS) {
 								//printf("Index(out) doubled!\n");
 							}
-							else
+							else {
 								printf("FAIL: Index(out) realloc\n");
+								return -1;
+							}
 							current_out_ind_size=2*current_out_ind_size;
 							head=getListHead(out_index,from,current_out_ind_size);
 						}
@@ -171,27 +180,33 @@ int main(int argc, char *argv[]) {
 						if (double_buffer(&out_buffer,current_out_buf_size)==OK_SUCCESS) {
 							//printf("Buffer(out) doubled!\n");
 						}
-						else
+						else {
 							printf("FAIL: Buffer(out) realloc\n");
+							return -1;
+						}
 						current_out_buf_size=2*current_out_buf_size;
 						offset=allocNewNode(out_buffer);
-						//printf("New list_node allocated\n");
 					}
-					//else
-						//printf("New list_node allocated\n");
+					//printf("New list_node allocated\n");
 					if (insertNode(out_index,from,offset)==OK_SUCCESS) {
 						//printf("Node inserted to index(out)\n");
 					}
-					else
+					else {
 						printf("Something went very wrong...\n");
+						return -1;
+					}
 					last=add_neighbour(out_buffer,offset,to);
 					if (last==OK_SUCCESS) {
 						//printf("Neighbour added\n");
 					}
-					else if (last==NEIGHB_EXISTS)
+					else if (last==NEIGHB_EXISTS) {
 						printf("Something went wrong...\n");
-					else
+						return -1;
+					}
+					else {
 						printf("I WILL NEVER BE PRINT!\n");
+						return -1;
+					}
 				}
 				if (neighb_exists==0) {
 					/* IN structures */
@@ -210,14 +225,14 @@ int main(int argc, char *argv[]) {
 								if (double_buffer(&in_buffer,current_in_buf_size)==OK_SUCCESS) {
 									//printf("Buffer(in) doubled!\n");
 								}
-								else
+								else {
 									printf("FAIL: Buffer(in) realloc\n");
+									return -1;
+								}
 								current_in_buf_size=2*current_in_buf_size;
 								new=allocNewNode(in_buffer);
-								//printf("New list_node allocated\n");
 							}
-							//else
-								//printf("New list_node allocated\n");
+							//printf("New list_node allocated\n");
 							getListNode((in_buffer->base_addr)+last,&nod);
 							nod.nextListNode=new;					// we link 'new' as the continuation of 'last'
 							memmove((in_buffer->base_addr)+last,&nod,sizeof(list_node));
@@ -225,10 +240,14 @@ int main(int argc, char *argv[]) {
 							if (b==OK_SUCCESS) {
 								//printf("Neighbour added\n");
 							}
-							else if (b==NEIGHB_EXISTS)
+							else if (b==NEIGHB_EXISTS) {
 								printf("Something went wrong...\n");
-							else
+								return -1;
+							}
+							else {
 								printf("Something went very wrong...\n");
+								return -1;
+							}
 						}
 					}
 					else {
@@ -237,8 +256,10 @@ int main(int argc, char *argv[]) {
 								if (double_index(&in_index,current_in_ind_size)==OK_SUCCESS) {
 									//printf("Index(in) doubled!\n");
 								}
-								else
+								else {
 									printf("FAIL: Index(in) realloc\n");
+									return -1;
+								}
 								current_in_ind_size=2*current_in_ind_size;
 								head=getListHead(in_index,to,current_in_ind_size);
 							}
@@ -248,27 +269,33 @@ int main(int argc, char *argv[]) {
 							if (double_buffer(&in_buffer,current_in_buf_size)==OK_SUCCESS) {
 								//printf("Buffer(in) doubled!\n");
 							}
-							else
+							else {
 								printf("FAIL: Buffer(in) realloc\n");
+								return -1;
+							}
 							current_in_buf_size=2*current_in_buf_size;
 							offset=allocNewNode(in_buffer);
-							//printf("New list_node allocated\n");
 						}
-						//else
-							//printf("New list_node allocated\n");
+						//printf("New list_node allocated\n");
 						if (insertNode(in_index,to,offset)==OK_SUCCESS) {
 							//printf("Node inserted to index(in)\n");
 						}
-						else
+						else {
 							printf("Something went very wrong...\n");
+							return -1;
+						}
 						last=add_neighbour(in_buffer,offset,from);
 						if (last==OK_SUCCESS) {
 							//printf("Neighbour added\n");
 						}
-						else if (last==NEIGHB_EXISTS)
+						else if (last==NEIGHB_EXISTS) {
 							printf("Something went wrong...\n");
-						else
+							return -1;
+						}
+						else {
 							printf("I WILL NEVER BE PRINT!\n");
+							return -1;
+						}
 					}
 				}
 			}
@@ -277,7 +304,7 @@ int main(int argc, char *argv[]) {
 
 	if(fclose(fp) == -1) {
 		printf("Error: Mas kanei nera to 2o arxeio\n");
-		return -10;
+		return -1;
 	}
 
 	printf("\n");
