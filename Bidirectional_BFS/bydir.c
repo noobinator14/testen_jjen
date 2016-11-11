@@ -101,7 +101,6 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 	for (i=0;i<NEIGHB;i++) {
 		if (nod2.neighbor[i]==-1)
 			break;
-		// mhpws 8elei an einai o from??
 		else if (nod2.neighbor[i]>=0){
 			if(checked[nod2.neighbor[i]] == 1) {
 				free(checked);
@@ -122,7 +121,6 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 			for (i=0;i<NEIGHB;i++) {
 				if (next2.neighbor[i]==-1)
 					break;
-				// mhpws 8elei an einai o from??
 				else if (next2.neighbor[i]>=0) {
 					if(checked[next2.neighbor[i]] == 1) {
 						free(checked);
@@ -206,7 +204,6 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 					for (i=0;i<NEIGHB;i++) {
 						if (nod1.neighbor[i]==-1)
 							break;
-						// mhpws 8elei an einai o to??
 						else if (nod1.neighbor[i]>=0) {
 							if(checked[nod1.neighbor[i]] == 2) {
 								free(checked);
@@ -229,7 +226,6 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 							for (i=0;i<NEIGHB;i++) {
 								if (next1.neighbor[i]==-1)
 									break;
-								// mhpws 8elei an einai o to??
 								else if (next1.neighbor[i]>=0) {
 									if(checked[next1.neighbor[i]] == 2) {
 										free(checked);
@@ -294,7 +290,6 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 					for (i=0;i<NEIGHB;i++) {
 						if (nod2.neighbor[i]==-1)
 							break;
-						// mhpws 8elei.....?
 						else if (nod2.neighbor[i]>=0) {
 							if(checked[nod2.neighbor[i]] == 1) {
 								free(checked);
@@ -317,7 +312,6 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 							for (i=0;i<NEIGHB;i++) {
 								if (next2.neighbor[i]==-1)
 									break;
-								// mhpws 8elei.....?
 								else if (next2.neighbor[i]>=0) {
 									if(checked[next2.neighbor[i]] == 1) {
 										free(checked);
@@ -373,7 +367,6 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 
 	}
 
-//////////////////////////////////////////
 	free(visited);
 	free(checked);
 	return -1;						// path does not exist
