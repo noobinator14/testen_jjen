@@ -31,7 +31,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 	if(current_out_ind_size>current_in_ind_size) {
 		checked = malloc(sizeof(unsigned char)*current_out_ind_size);
 		if(checked == NULL) {
-			perror("JOHN CENA TOUROUTOUTOU");
+			perror("malloc of 'checked' ");
 			return -2;
 		}
 		for(i=0; i<current_out_ind_size; i++) {
@@ -41,7 +41,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 	else {
 		checked = malloc(sizeof(unsigned char)*current_in_ind_size);
 		if(checked == NULL) {
-			perror("JOHN CENA TOUROUTOUTOU");
+			perror("malloc of 'checked' ");
 			return -2;
 		}
 		for(i=0; i<current_in_ind_size; i++) {
@@ -77,7 +77,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 					return 1;
 				}
 				else if (next1.neighbor[i]>=0) {
-					checked[nod1.neighbor[i]] = 1;
+					checked[next1.neighbor[i]] = 1;
 					if ( (eisagogi_telos (next_nodes1,next1.neighbor[i])) < 0) {
 						free(checked);
 						return -2;
@@ -101,13 +101,14 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 	for (i=0;i<NEIGHB;i++) {
 		if (nod2.neighbor[i]==-1)
 			break;
+		// mhpws 8elei an einai o from??
 		else if (nod2.neighbor[i]>=0){
 			if(checked[nod2.neighbor[i]] == 1) {
 				free(checked);
 				return 2;
 			}
 			else {
-				checked[nod2.neighbor[i]] = 1;
+				checked[nod2.neighbor[i]] = 2;
 			}
 			if ( (eisagogi_telos(next_nodes2,nod2.neighbor[i])) < 0) {
 				free(checked);
@@ -121,13 +122,14 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 			for (i=0;i<NEIGHB;i++) {
 				if (next2.neighbor[i]==-1)
 					break;
+				// mhpws 8elei an einai o from??
 				else if (next2.neighbor[i]>=0) {
-					if(checked[nod2.neighbor[i]] == 1) {
+					if(checked[next2.neighbor[i]] == 1) {
 						free(checked);
 						return 2;
 					}
 					else {
-						checked[nod2.neighbor[i]] = 1;
+						checked[next2.neighbor[i]] = 2;
 					}
 					if ( (eisagogi_telos (next_nodes2,next2.neighbor[i])) < 0) {
 						free(checked);
@@ -168,10 +170,10 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 		for (i=0;i<visit_size;i++)
 			visited[i]=0;
 	}
-	if (from<visit_size)
-		visited[from]=1;				// mark as visited
-	if(to<visit_size)
+	if (from<visit_size && to<visit_size) {			// mark as visited
+		visited[from]=1;
 		visited[to]=1;
+	}
 	else {
 		printf("BFS: out of 'visited' bounds\n");
 		free(visited);
@@ -195,11 +197,6 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 	while(1) {
 		//Katebainoume epipedo apo A
 		distance1++;
-		if (LIST_keni(*next_nodes1)) {
-			free(visited);
-			free(checked);
-			return -1;
-		}
 		current1=eksagogi_arxi(next_nodes1);
 		while (current1!=-3) {
 			if (visited[current1]==0) {
@@ -209,6 +206,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 					for (i=0;i<NEIGHB;i++) {
 						if (nod1.neighbor[i]==-1)
 							break;
+						// mhpws 8elei an einai o to??
 						else if (nod1.neighbor[i]>=0) {
 							if(checked[nod1.neighbor[i]] == 2) {
 								free(checked);
@@ -231,6 +229,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 							for (i=0;i<NEIGHB;i++) {
 								if (next1.neighbor[i]==-1)
 									break;
+								// mhpws 8elei an einai o to??
 								else if (next1.neighbor[i]>=0) {
 									if(checked[next1.neighbor[i]] == 2) {
 										free(checked);
@@ -286,11 +285,6 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 
 		//Anebainoume epipedo apo B
 		distance2++;
-		if (LIST_keni(*next_nodes2)) {
-			free(visited);
-			free(checked);
-			return -1;
-		}
 		current2=eksagogi_arxi(next_nodes2);
 		while (current2!=-3) {
 			if (visited[current2]==0) {
@@ -300,6 +294,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 					for (i=0;i<NEIGHB;i++) {
 						if (nod2.neighbor[i]==-1)
 							break;
+						// mhpws 8elei.....?
 						else if (nod2.neighbor[i]>=0) {
 							if(checked[nod2.neighbor[i]] == 1) {
 								free(checked);
@@ -322,6 +317,7 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 							for (i=0;i<NEIGHB;i++) {
 								if (next2.neighbor[i]==-1)
 									break;
+								// mhpws 8elei.....?
 								else if (next2.neighbor[i]>=0) {
 									if(checked[next2.neighbor[i]] == 1) {
 										free(checked);
@@ -376,7 +372,6 @@ int mybfs (uint32_t from, uint32_t to, Buffer *out_buffer, Buffer * in_buffer, N
 		}
 
 	}
-
 
 //////////////////////////////////////////
 	free(visited);
