@@ -37,16 +37,22 @@ int insertNode(NodeIndex* index, uint32_t nodeId, long offset) {
 		return FAILURE;
 }
 
-int double_index(NodeIndex **index, int current_ind_size) {
+int double_index(NodeIndex **index, uint32_t nodeId, int current_ind_size, int *multiplier) {
 
-	int i=0;
+	int i=0, final=2, temp;
 
-	void *tmp=realloc(*index,2*current_ind_size*sizeof(NodeIndex));
+	temp=2*current_ind_size;
+	while (nodeId>=temp) {
+		final*=2;
+		temp*=2;
+	}
+	*multiplier=final;
+	void *tmp=realloc(*index,final*current_ind_size*sizeof(NodeIndex));
 	if (tmp!=NULL)
 		(*index)=tmp;
 	else
 		return FAILURE;
-	for (i=current_ind_size;i<2*current_ind_size;i++)	// initialize newly allocated space as unused
+	for (i=current_ind_size;i<final*current_ind_size;i++)	// initialize newly allocated space as unused
 		(*index)[i]=-1;
 	return OK_SUCCESS;
 }

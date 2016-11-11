@@ -9,7 +9,7 @@
 int main(int argc, char *argv[]) {
 
 	int u=0;
-	int current_out_buf_size, current_out_ind_size, current_in_buf_size, current_in_ind_size;
+	int current_out_buf_size, current_out_ind_size, current_in_buf_size, current_in_ind_size, multiplier=1;
 	long offset, last, new, head, count=0, s_path_fo, b, neighb_exists=0;
 	uint32_t from, to;
 	char s[2];
@@ -159,18 +159,16 @@ int main(int argc, char *argv[]) {
 					}
 				}
 				else {
-					if (head==-2) {						// out of bounds->double index until nodeId fits into index
-						while (head==-2) {
-							if (double_index(&out_index,current_out_ind_size)==OK_SUCCESS) {
-								//printf("Index(out) doubled!\n");
-							}
-							else {
-								printf("FAIL: Index(out) realloc\n");
-								return -1;
-							}
-							current_out_ind_size=2*current_out_ind_size;
-							head=getListHead(out_index,from,current_out_ind_size);
+					if (head==-2) {						// out of bounds->double index 
+						if (double_index(&out_index,from,current_out_ind_size,&multiplier)==OK_SUCCESS) {
+							//printf("Index(out) doubled!\n");
 						}
+						else {
+							printf("FAIL: Index(out) realloc\n");
+							return -1;
+						}
+						current_out_ind_size=multiplier*current_out_ind_size;
+						//head=getListHead(out_index,from,current_out_ind_size);	//nomizw de xreiazetai
 					}
 					offset=allocNewNode(out_buffer);
 					if (offset==-1) {						// double our buffer
@@ -248,18 +246,16 @@ int main(int argc, char *argv[]) {
 						}
 					}
 					else {
-						if (head==-2) {						// out of bounds->double index until nodeId fits into index
-							while (head==-2) {
-								if (double_index(&in_index,current_in_ind_size)==OK_SUCCESS) {
-									//printf("Index(in) doubled!\n");
-								}
-								else {
-									printf("FAIL: Index(in) realloc\n");
-									return -1;
-								}
-								current_in_ind_size=2*current_in_ind_size;
-								head=getListHead(in_index,to,current_in_ind_size);
+						if (head==-2) {						// out of bounds->double index 
+							if (double_index(&in_index,to,current_in_ind_size,&multiplier)==OK_SUCCESS) {
+								//printf("Index(in) doubled!\n");
 							}
+							else {
+								printf("FAIL: Index(in) realloc\n");
+								return -1;
+							}
+							current_in_ind_size=multiplier*current_in_ind_size;
+							//head=getListHead(in_index,to,current_in_ind_size);
 						}
 						offset=allocNewNode(in_buffer);
 						if (offset==-1) {						// double our buffer

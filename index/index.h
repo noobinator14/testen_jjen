@@ -15,6 +15,6 @@ int getListHead(NodeIndex* index, uint32_t nodeId, int current_ind_size);	// ret
 
 int destroyNodeIndex(NodeIndex* index);	// free
 
-int double_index(NodeIndex **index, int current_ind_size);
+int double_index(NodeIndex **index, uint32_t nodeId, int current_ind_size, int *multiplier);
 
 #endif
