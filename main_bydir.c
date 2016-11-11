@@ -250,7 +250,7 @@ int main(int argc, char *argv[]) {
 					}
 					else {
 						if (head==-2) {						// out of bounds->double index until nodeId fits into index
-							if (double_index(&in_index,to,current_in_ind_size,multiplier)==OK_SUCCESS) {
+							if (double_index(&in_index,to,current_in_ind_size,&multiplier)==OK_SUCCESS) {
 								//printf("Index(in) doubled!\n");
 							}
 							else {
