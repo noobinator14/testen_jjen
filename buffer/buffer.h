@@ -1,9 +1,9 @@
 #ifndef __BUFFER_H__
 #define __BUFFER_H__
 
-#define STARTING_BUF_SIZE 500000		// how many structs fit
-#define NEIGHB 100
-#define NEIGHB_EXISTS -4
+#define STARTING_BUF_SIZE 5000
+#define NEIGHB 5
+
 #define OK_SUCCESS -5
 #define FAILURE -6
 
@@ -14,6 +14,8 @@ typedef struct {
 	uint32_t neighbor[NEIGHB];
 	//uint32_t edgeProperty[NEIGHB];
 	long nextListNode;
+	int nextEmptySlot;			// -1 -> no empty slot in this list_node
+	long lastListNode;			/* -1 if this is the last list_node (note: 1st node indicates correctly to the last) */
 
 } list_node ;
 
@@ -26,19 +28,20 @@ typedef struct {
 } Buffer ;
 
 
-Buffer* createBuffer();	// malloc (+init) enan (poly) megalo xwro (pollaplasio tou sizeof(list_node) isws?)
+Buffer* createBuffer();
 
-int allocNewNode(Buffer* buf);	// an xwraei allo list_node [max_size-allocated>=sizeof(list_node)], return allocated
-				// kai Buffer->allocated+=sizeof(list_node)
+int allocNewNode(Buffer* buf);
 
-long add_neighbour(Buffer * buf, long off, uint32_t to);
+long add_neighbour(Buffer * buf, long first_node_off, uint32_t to);
 
 void getListNode(void *addr, list_node *my_node);
 
-int destroyBuffer(Buffer* buf);	// free
+int destroyBuffer(Buffer* buf);
 
 int double_buffer(Buffer **buf, int current_buf_size);
 
 
 
 #endif
+
+

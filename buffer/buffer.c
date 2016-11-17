@@ -35,6 +35,8 @@ int allocNewNode(Buffer* buf) {
 			//new.edgeProperty[i]=-1;
 		}
 		new.nextListNode=-1;
+		new.nextEmptySlot=0;
+		new.lastListNode=-1;
 		memmove((buf->base_addr)+(buf->allocated),&new,sizeof(list_node));
 		ret=buf->allocated;
 		buf->allocated+=sizeof(list_node);
@@ -47,32 +49,42 @@ void getListNode(void *addr, list_node *my_node) {
 	memmove(my_node,addr,sizeof(list_node));
 }
 
-long add_neighbour(Buffer * buf, long off, uint32_t to) {
+long add_neighbour(Buffer * buf,long first_node_off, uint32_t to) {
 
-	long i=0, added=0, writeback;
-
-	list_node my_node;
-	writeback=off;
-	getListNode((buf->base_addr)+off,&my_node);
-	while (added==0) {
-		for (i=0;i<NEIGHB;i++) {
-			if (my_node.neighbor[i]==to)
-				return NEIGHB_EXISTS;
-			if (my_node.neighbor[i]==-1) {
-				my_node.neighbor[i]=to;
-				memmove((buf->base_addr)+writeback,&my_node,sizeof(list_node));
-				added=1;
+	list_node nod,first;
+	//printf("1st node offset = %ld\n",first_node_off);
+	getListNode((buf->base_addr)+first_node_off,&first);		// get 1st node
+	//printf("first.lastListNode = %ld\n",first.lastListNode);
+	if (first.lastListNode==-1) {				// 1st is the last
+		if (first.nextEmptySlot==-1)
+			return first_node_off;
+		else {
+			first.neighbor[first.nextEmptySlot]=to;
+			first.nextEmptySlot++;
+			if (first.nextEmptySlot==NEIGHB)
+					first.nextEmptySlot=-1;
+			memmove((buf->base_addr)+first_node_off,&first,sizeof(list_node));
+			return OK_SUCCESS;
+		}
+	}
+	else {
+		getListNode((buf->base_addr)+first.lastListNode,&nod);		// get last from 1st
+		if (nod.lastListNode==-1) {			// this is the last
+			if (nod.nextEmptySlot==-1) {		// no space for more neighbours here
+				return first.lastListNode;			// returns offset of last node
+			}
+			else {
+				nod.neighbor[nod.nextEmptySlot]=to;
+				nod.nextEmptySlot++;
+				if (nod.nextEmptySlot==NEIGHB)
+					nod.nextEmptySlot=-1;
+				memmove((buf->base_addr)+first.lastListNode,&nod,sizeof(list_node));
 				return OK_SUCCESS;
 			}
 		}
-		if (added==0 && my_node.nextListNode!=-1) {
-			writeback=my_node.nextListNode;
-			getListNode((buf->base_addr)+writeback,&my_node);
-		}
-		else if (added==0 && my_node.nextListNode==-1)
-			break;
+		else
+			return FAILURE;
 	}
-	return writeback;
 }
 
 int double_buffer(Buffer **buf, int current_buf_size) {
@@ -85,3 +97,5 @@ int double_buffer(Buffer **buf, int current_buf_size) {
 	(*buf)->max_size=2*current_buf_size*sizeof(list_node);
 	return OK_SUCCESS;
 }
+
+

@@ -1,7 +1,7 @@
 #ifndef __INDEX_H__
 #define __INDEX_H__
 
-#define STARTING_IND_SIZE 500000
+#define STARTING_IND_SIZE 600
 
 #include <stdint.h>
 
