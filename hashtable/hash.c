@@ -86,7 +86,7 @@ int check_add(bucketPtr hash, uint32_t to, int skip_check) {
 		new->next_empty=1;
 		new->next_bucket=NULL;
 		last->next_bucket=new;
-		hash->last_bucket=last;		// 1st bucket knows who is the last bucket
+		hash->last_bucket=new;		// 1st bucket knows who is the last bucket
 		return 0;
 	}
 	//printf("sasa4 last_cell=%d\n",last_cell);
