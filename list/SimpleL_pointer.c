@@ -42,6 +42,14 @@ void LIST_katastrofi(info_deikti * linfo) {
 		free(todel2);
 	}
 	(*linfo)->arxi = NULL;
+	(*linfo)->telos = NULL;
+	free(*linfo);
+	(*linfo)=NULL;
+}
+
+void LIST_katastrofi_info_node(info_deikti * linfo) {
+	(*linfo)->arxi = NULL;
+	(*linfo)->telos = NULL;
 	free(*linfo);
 	(*linfo)=NULL;
 }
@@ -100,16 +108,52 @@ int anazhthsh (info_deikti linfo, int num) {
 /* Returns 1 if exists, else 0 */
 
 	if (!LIST_keni(linfo)) {
-		typos_deikti current=linfo->arxi;
+		//printf("sa4\n");
+		typos_deikti current=linfo->arxi;//printf("sa5\n");
 		while (current!=NULL) {
 			if (current->dedomena==num)
 				return 1;
-			else
+			else {
+				//if (current->epomenos!=NULL)
+				//	printf("current->epomenos=%p\n",current->epomenos);
+				//else
+				//	printf("current->epomenos=NULL\n");
 				current=current->epomenos;
+			}
+			//printf("sa6\n");
 		}
+		//printf("sa7\n");
 	}
 	return 0;
 }
+
+typos_deikti get_arxi (info_deikti linfo) {
+	return linfo->arxi;
+}
+
+typos_deikti epomenos (typos_deikti prodeiktis) {
+	return (prodeiktis->epomenos);
+}
+
+int periexomeno (typos_deikti kombos) {
+	return kombos->dedomena;
+}
+
+int merge_telos (info_deikti *linfo1, info_deikti linfo2) {
+
+	if ((*linfo1)->size==0) {
+		(*linfo1)->arxi=(linfo2->arxi);
+		(*linfo1)->telos=(linfo2->telos);
+		(*linfo1)->size=(linfo2->size);
+	}
+	else {
+		((*linfo1)->telos)->epomenos=(linfo2->arxi);
+		(*linfo1)->telos=(linfo2->telos);
+		(*linfo1)->size+=(linfo2->size);
+	}
+	return 0;
+}
+
 
 
 

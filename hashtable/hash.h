@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define HASH_SIZE 300
+#define HASH_SIZE 100
 #define BUCKET_SIZE 3		// megalytero toy 0
 
 typedef struct bucket * bucketPtr;

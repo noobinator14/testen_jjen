@@ -4,8 +4,8 @@
 #define STARTING_BUF_SIZE 5000
 #define NEIGHB 5
 
-#define OK_SUCCESS -5
-#define FAILURE -6
+#define OK_SUCCESS -8
+#define FAILURE -9
 
 #include <stdint.h>
 

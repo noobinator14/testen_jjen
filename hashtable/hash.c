@@ -15,7 +15,7 @@ bucketPtr create_hashtable() {
 
 	bucketPtr hash=malloc(HASH_SIZE*sizeof(struct bucket));
 	if (hash==NULL) {
-		perror("malloc at create");
+		perror("malloc at create_hash");
 		return NULL;
 	}
 	for (i=0;i<HASH_SIZE;i++) {

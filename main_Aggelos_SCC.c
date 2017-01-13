@@ -4,18 +4,23 @@
 #include <string.h>
 #include "./index/index.h"
 #include "./buffer/buffer.h"
-#include "./Bidirectional_BFS/bydir.h"
+#include "./Bidirectional_BFS_SCC/bydir.h"
 #include "./list/Pointer_List.h"
 #include "./hashtable/hash.h"
+#include "./strongly_connected_comp/scc.h"
 
 int main(int argc, char *argv[]) {
 
 	int current_out_buf_size, current_out_ind_size, current_in_buf_size, current_in_ind_size, i, u=0, multiplier=1, hash_value;
 	long offset, last, new, head, count=0, s_path_fo, b, c;
-	uint32_t from, to;
+	uint32_t from, to, bNode = 0;
 	char s[2];
 	void *tmp;
+
 	list_node nod, nod2;
+
+	scc *SCC;
+
 	FILE *fp, *fp1, *fp2;
 
 	if(argc < 3) {
@@ -23,7 +28,7 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-	current_out_buf_size=STARTING_BUF_SIZE;				// posa struct list_node xwrane
+	current_out_buf_size=STARTING_BUF_SIZE;				// posa struct list_node xwrane (polla!)
 	current_out_ind_size=STARTING_IND_SIZE;
 	current_in_buf_size=STARTING_BUF_SIZE;
 	current_in_ind_size=STARTING_IND_SIZE;
@@ -35,7 +40,7 @@ int main(int argc, char *argv[]) {
 	Buffer* in_buffer=createBuffer();
 	//printf("In+out buffers created!\n");
 	bucketPtr *hash_index=malloc(current_out_ind_size*sizeof(bucketPtr));
-	for (i=0;i<current_out_ind_size;i++)
+	for (i=0;i<current_out_ind_size;i++)	//Giati mono sto out...
 		hash_index[i]=NULL;
 	printf("Hash index created!\n");
 
@@ -82,6 +87,16 @@ int main(int argc, char *argv[]) {
 					return -1;
 				}
 				u++;
+				//Εδώ καλούμε τον αλγόριθμο για τα S.C.C.
+				printf("Master, initiating SCC functions\n");
+				SCC = estimatedStronglyConnectComp(out_buffer, in_buffer, out_index, in_index, current_out_ind_size, current_in_ind_size, bNode);
+				if(SCC == NULL) {
+					return -9;
+				}
+				else {
+					printf("Master, SCC is ready\n");
+					getchar();
+				}
 				continue;
 			}
 			else {
@@ -108,7 +123,8 @@ int main(int argc, char *argv[]) {
 				info_deikti next_nodes2=LIST_dimiourgia();
 				if (next_nodes1==NULL || next_nodes2==NULL)
 					return -1;
-				s_path_fo=mybfs(from, to, out_buffer, in_buffer, out_index, in_index, current_out_ind_size, current_in_ind_size, &next_nodes1, &next_nodes2);
+				s_path_fo = estimateShortestPathStronglyConnectedComponents(SCC, out_buffer, in_buffer, out_index, in_index, current_out_ind_size, current_in_ind_size, from, to, 												&next_nodes1, &next_nodes2);
+				//s_path_fo=mybfs(from, to, out_buffer, in_buffer, out_index, in_index, current_out_ind_size, current_in_ind_size, &next_nodes1, &next_nodes2);
 				if (s_path_fo==-2) {
 					printf("Error inside bidirectional.\nCount=%ld. Terminating.\n",count);
 					return -1;
@@ -123,6 +139,12 @@ int main(int argc, char *argv[]) {
 		}
 		if((fp == fp1) || ((fp == fp2) && (strcmp(s, "A")==0))) {
 			if (from>=0 && to>=0 && from!=to) {
+				if(from > bNode) {
+					bNode = from;
+				}
+				else if(to > bNode) {
+					bNode = to;
+				}
 				if (from<current_out_ind_size) {
 					hash_value=hash_func(to);
 					if (hash_index[from]==NULL) {
@@ -362,6 +384,11 @@ int main(int argc, char *argv[]) {
 	}
 	free(hash_index);
 	printf("Hash index destroyed...\n");
+	if(destroyStronglyConnectedComponents(SCC) == OK_SUCCESS)
+		printf("Master, SCC has been deleted successfuly\n");
+	else
+		printf("Master, we couldn't delete your SCC struct\n");
+	printf("SJiet\n");
 	if (destroyBuffer(out_buffer)==OK_SUCCESS)
 		printf("Buffer(out) destroyed...\n");
 	else
